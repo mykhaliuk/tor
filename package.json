@@ -1,0 +1,23 @@
+{
+  "name": "tor",
+  "version": "1.0.0",
+  "description": "Tor of timers ",
+  "main": "app.js",
+  "scripts": {
+    "test": "\"console.log('Error: no test scrpts')\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mykhaliuk/tor.git"
+  },
+  "keywords": [
+    "Timers",
+    "memos"
+  ],
+  "author": "Mykhaliuk Vladimir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mykhaliuk/tor/issues"
+  },
+  "homepage": "https://github.com/mykhaliuk/tor#readme"
+}
