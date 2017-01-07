@@ -1,0 +1,1 @@
+{"version":3,"sources":["main.styl"],"names":[],"mappings":"AAEA,KACE,MAAM,KACR,GAAI,GAAI,GAAI,GAAI,GAAI,GAClB,MAAM","file":"main.css","sourcesContent":["@require 'partials/_variables.styl';\n\nbody\n  color _mainColor\nh1, h2, h3, h4, h5, h6\n  color _headersColor;"]}
