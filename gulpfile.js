@@ -70,6 +70,9 @@ gulp.task('js', function () {
             plugins.util.log(e)
         })
         .pipe(source('main.js'))
+        .pipe(buffer())
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.sourcemaps.write('.'))
         .pipe(gulp.dest('build/public/js'))
 })
 /*gulp.task('js', function () {
@@ -131,20 +134,6 @@ gulp.task('clean', function () {
     gulp.src(paths.clean)
         .pipe(plugins.clean({}))
 })
-
-
-// function bundle(bundler) {
-//
-//     bundler
-//         .bundle()
-//         .pipe(source(paths.src.front_js))
-//         .pipe(buffer())
-//         .pipe(plugins.rename('main.js'))
-//         .pipe(plugins.sourcemaps.init())
-//         .pipe(plugins.sourcemaps.write('.'))
-//         .pipe(gulp.dest(paths.build.front_js))
-//     ;//.pipe(livereload());                                       // Перезагрузка браузера
-// }
 
 function log(error) {
     console.log([

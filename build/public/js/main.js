@@ -24,3 +24,5 @@ console.log('' + i);
 (0, _lib2.default)();
 
 },{"lib":1}]},{},[2]);
+
+//# sourceMappingURL=main.js.map
