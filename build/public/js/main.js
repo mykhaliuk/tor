@@ -5,22 +5,23 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 function say() {
-    console.log("lib.js is included");
+    console.log("lib.js is included.");
+    console.log("lib.js is included.");
 }
 
 exports.default = say;
 
 },{}],2:[function(require,module,exports){
-'use strict';
+"use strict";
 
-var _lib = require('lib');
+var _lib = require("lib");
 
 var _lib2 = _interopRequireDefault(_lib);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var i = 'Yo!';
-console.log('' + i);
+var i = "Yo!";
+console.log("" + i);
 (0, _lib2.default)();
 
 },{"lib":1}]},{},[2]);

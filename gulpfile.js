@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     buffer = require('vinyl-buffer'),
     source = require('vinyl-source-stream'),
     browserSync = require("browser-sync"),
+    csso = require('csso'),
     reload = browserSync.reload,
     args = require('yargs').argv,
     colors = require('colors'),
@@ -26,123 +27,172 @@ if (!serverUrl) {
 ////////////////////////////////////
 //  PATHS
 ////////////////////////////////////
-var paths = {
+var path = {
     build: {
-        app: 'build/app/',
-        configs: 'build/configs/',
-        jade: 'build/views/',
-        front_js: './build/public/js/',
-        mapDir: 'build/public/js/maps/',
+        build: 'build/',
+        views: 'build/public/',
+        front_js: 'build/public/js/',
         css: 'build/public/css/',
         img: 'build/public/img/',
         fonts: 'build/public/fonts/'
     },
     src: {
-        app: 'src/app/**/*.*',
-        configs: 'src/configs/**/*.*',
-        jade: 'src/views/**/*.*',
-        styles: 'src/front-end/styles/**/[^_]*.styl',
-        front_js: 'js/main.js',
-        img: 'src/front-end/img/**/*.*',
-        fonts: 'src/fonts/**/*.*'
+        src: 'src/',
+        styles: 'src/styles/**/[^_]*.styl',
+        entries: ['src/js/main.js'],
+        jsFolder: 'src/js/',
+        img: 'src/img/*',
+        fonts: 'src/fonts/'
     },
     watch: {
-        html: 'src/**/*.html',
-        js: 'js/*.js',
-        styles: 'src/front-end/styles/**/*.styl',
-        img: 'src/img/**/*.*',
-        fonts: 'src/fonts/**/*.*'
+        html: 'build/views/**/*',
+        js: 'src/js/**/*',
+        styles: 'src/styles/**/*',
+        img: 'src/img/**/*',
+        fonts: 'src/fonts/**/*'
     },
-    clean: 'build/*'
+    clean: 'build/public/*'
 };
-//todo: delete csso
 ////////////////////////////////////
-//  JS Tasks
+//  JavaScript Tasks
 ////////////////////////////////////
 gulp.task('js', function () {
     browserify({
-        entries: ['js/main.js'],
-        paths: ['/node_modules','js/']
+        entries: [path.src.entries],
+        paths: ['/node_modules', path.src.jsFolder]
     })
         .transform(babelify, {presets: ["es2015"]})
         .bundle()
-        .on('error', function (e) {
-            plugins.util.log(e)
-        })
+        .on('error', log)
         .pipe(source('main.js'))
         .pipe(buffer())
-        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.sourcemaps.init({loadMaps: true}))    // todo: source maps doesn't work properly
         .pipe(plugins.sourcemaps.write('.'))
-        .pipe(gulp.dest('build/public/js'))
-})
-/*gulp.task('js', function () {
- var bundler = browserify(paths.src.front_js)
- .transform(babelify, {presets: ['es2015']});
- bundle(bundler);
- });*/
-
+        .pipe(gulp.dest(path.build.front_js))
+        .pipe(plugins.livereload());
+});
 ////////////////////////////////////
 //  Stylus Tasks
 ////////////////////////////////////
 gulp.task('styles', function () {
-    gulp.src(paths.build.css + '**/*.*', {read: false})
+    gulp.src(path.build.css, {read: false, force: true})
         .pipe(plugins.clean());
-    gulp.src(paths.src.styles)
+    gulp.src(path.src.styles)
         .pipe(plugins.sourcemaps.init())
         .pipe(plugins.stylus({
-            compress: true,
             'include css': true
-        }))
-        .on('error', log)
-        .pipe(plugins.sourcemaps.write('.'))
+        })).on('error', log)
+        .pipe(plugins.csso()).on('error', log)
         .pipe(plugins.rename({suffix: '.min'}))
-        .pipe(gulp.dest(paths.build.css))
-        .pipe(browserSync.stream());
+        .pipe(plugins.sourcemaps.write('.'))
+        .pipe(gulp.dest(path.build.css))
+        .pipe(plugins.livereload());
+    //.pipe(browserSync.stream());
 });
-//////////////////////////////
+////////////////////////////////////
 // Autoprefixer Tasks
-//////////////////////////////
-gulp.task('prefix', function () {
-    gulp.src(paths.build.css + '*.css')
+////////////////////////////////////
+gulp.task('prefix', ['styles'], function () {
+    gulp.src(path.build.css + '*.css')
         .pipe(plugins.autoprefixer(["last 8 version", "> 1%", "ie 9"]))
         .on('error', log)
-        .pipe(gulp.dest(paths.build.css));
+        .pipe(gulp.dest(path.build.css));
 });
-//////////////////////////////
+////////////////////////////////////
+//  Images Tsaks
+////////////////////////////////////
+gulp.task('img', function () {
+    gulp.src(path.src.img)
+        .pipe(plugins.imagemin()).on('error', log)
+        .pipe(gulp.dest(path.build.img));
+});
+////////////////////////////////////
+//  HTML Tasks
+////////////////////////////////////
+gulp.task('html', function () {
+    gulp.src(path.build.views)
+        .pipe(plugins.livereload())
+});
+////////////////////////////////////
 // Watch
-//////////////////////////////
+////////////////////////////////////
 gulp.task('watch', function () {
-    gulp.watch(paths.watch.js, ['js']);
-    gulp.watch(paths.watch.styles, ['styles']);
+    plugins.livereload.listen();
+    gulp.watch(path.watch.js, ['js']).on('change', bim);
+    gulp.watch(path.watch.styles, ['prefix']).on('change', bim);
+    gulp.watch(path.watch.html, ['html']).on('change', bim);
 });
-//////////////////////////////
+////////////////////////////////////
 // BrowserSync Task
-//////////////////////////////
+////////////////////////////////////
 gulp.task('browserSync', function () {
     browserSync.init({
         proxy: serverUrl
     });
 });
-//////////////////////////////
-// Server Tasks
-//////////////////////////////
-gulp.task('default', ['js', 'styles', 'watch', 'prefix']);
+////////////////////////////////////
+// Work Tasks
+////////////////////////////////////
+gulp.task('default', ['js', 'styles', 'prefix', 'img', 'watch', 'server']);
+gulp.task('build', ['js', 'styles', 'prefix']);
 ////////////////////////////////////
 //  Clean Task
 ////////////////////////////////////
 gulp.task('clean', function () {
-    gulp.src(paths.clean)
-        .pipe(plugins.clean({}))
-})
+    gulp.src(path.clean)
+        .pipe(plugins.clean({force: true})).on('error', log)
+});
+////////////////////////////////////
+//  Server Task
+////////////////////////////////////
+gulp.task('server', function () {
+    plugins.nodemon({
+        script: './build/app.js',
+        ignore: ['build/public/', 'src/', 'gulpfile*'],
+        //ext: 'js',
+        env: {'NODE_ENV': 'development'}
+    }).on('restart', function () {
+        gulp.src('build/')
+            .pipe(plugins.notify('Server is starting...'))
+            .pipe(plugins.livereload())
+    }).on('crash', function () {
+        console.error('Application has crashed!\n')
+        plugins.notify('OMG! Application has crashed!')
+        stream.emit('restart', 10)
+    });
+});
 
-function log(error) {
-    console.log([
-        '',
-        "          ERROR MESSAGE START         ".bold.red.underline,
-        ("[" + error.name + " in " + error.plugin + "]").blue.bold,
-        error.message,
-        "          ERROR MESSAGE END           ".bold.red.underline,
-        ''
-    ].join('\n'));
-    this.end();
-}
+//  Error Handler
+    var log = function (error) {
+        var lineNumber = (error.lineNumber) ? 'LINE ' + error.lineNumber + ' -- ' : '';
+
+        plugins.notify({
+            title: 'Task Failed [' + error.plugin + ']',
+            message: 'OMG! [' + error.plugin + '] :(',
+            sound: 'Basso' // See: https://github.com/mikaelbr/node-notifier#all-notification-options-with-their-defaults
+        }).write(error);
+
+        var report = '';
+        var chalk = plugins.util.colors.red.bold;
+
+        report += chalk('TASK:') + ' [' + error.plugin + ']\n';
+        report += chalk('PROB:') + ' ' + error.message + '\n';
+        if (error.lineNumber) {
+            report += chalk('LINE:') + ' ' + error.lineNumber + '\n';
+        }
+        if (error.fileName) {
+            report += chalk('FILE:') + ' ' + error.fileName;
+        }
+        console.error(report);
+        this.emit('end');
+    }
+
+//  Push notification
+    var bim = function (event) {
+        plugins.notify({
+            title: 'Watcher [' + event.type + ']',
+            message: 'File: ' + event.path,
+            sound: 'Pop' // See: https://github.com/mikaelbr/node-notifier#all-notification-options-with-their-defaults
+
+        }).write(event);
+    }
