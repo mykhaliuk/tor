@@ -1,0 +1,22 @@
+doctype html
+html
+    include includes/head
+    script(src="js/todo.js" defer)
+    body
+        include includes/header
+        main.on-modal-blur
+            .container
+                .row
+                    .col.s12.m12.l8.offset-l2
+                        input#new-todo.todolist(type='text', name='input', placeholder='     YOUR NEW TODO HERE...')
+                .row
+                    .col.s12.m12.l8.offset-l2
+                        ul.collection
+        //- footer.page-footer.on-modal-blur
+        //-     .footer-copyright
+        //-         .container
+        //-             | &copy;&nbsp2017&nbspVladimir&nbspMykhaliuk
+
+
+
+

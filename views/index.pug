@@ -1,0 +1,29 @@
+//- include mixins/_button
+//- include mixins/_input
+doctype html
+html
+    include includes/head
+    body
+        include includes/header
+        main.on-modal-blur  
+            .container
+                .row
+                .row
+                    .col.s12.m4.l4.offset-m1.offset-l2
+                            h3 Welcome.
+                            p Hope you know what to do ;)
+                    .col.s12.m5.l4
+                            include includes/login
+                                //TODO:
+//-         show any messages that come back with authentication
+if loginMessage.length > 0
+    #toast-message(hidden) #{loginMessage}
+    script.
+        Materialize.toast($('#toast-message').text(), 5000, 'toast-error');
+//-         show any messages that come back with signup
+if signupMessage.length > 0
+    #toast-message(hidden) #{signupMessage}
+    script.
+        Materialize.toast($('#toast-message').text(), 5000, 'toast-error');
+
+

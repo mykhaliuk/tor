@@ -1,0 +1,21 @@
+.modal#modal-signup
+    .modal-content
+        h5
+            span.fa.fa-sign-in
+            |  Signup
+        //- SignUp FORM
+        form(action="/signup" method="post")
+            .row
+                .input-field.col.s12
+                    input#input_signup.validate(type="email" name="email")
+                    label(for="input_signup" data-error="Email address only is accepted", data-success="") Email
+            .row
+                .input-field.col.s12
+                    input#input_password.validate(type="password" name="password")
+                    label(for="input_password" data-success="") Password
+            button.btn.btn-lg(type='submit') Signup
+            a.btn.modal-action.modal-close.margin-left Cancel
+        p: em
+            | Already have an account?
+            a.modal-action.modal-close(data-target="modal-login")  Login
+            |.

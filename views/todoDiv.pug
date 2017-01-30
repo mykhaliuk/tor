@@ -1,0 +1,8 @@
+each todo in todos
+    -var id = todo._id
+    li.collection-item.dismissable
+        span.truncate= todo.content
+        a.secondary-content( href="#" data-id=id )
+            i.fa.fa-lg.fa-edit.edit-todo(data-id=id data-badge-caption="")
+            i.fa.fa-lg.fa-check.delete-todo(data-id=id data-badge-caption="DONE")
+

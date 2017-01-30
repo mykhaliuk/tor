@@ -1,0 +1,47 @@
+header
+    //-  TOP NAV BAR
+    .navbar-fixed.on-modal-blur
+        nav(name="top-nav")
+            .nav-wrapper
+                a.button-collapse(href='#', data-activates='slide-out'): i.fa.fa-2x.fa-bars.margin
+                a.brand-logo.padding(href="/") VØ
+                ul#nav-mobile.right.hide-on-med-and-down
+                    if notLoggedIn
+                        //- li.active: a(data-target="modal-signup") Signup
+                        //- li: a(data-target="modal-login") Login
+                    else
+                        li: a.dropdown-button(href="#!" data-activates="apps-dropdown")
+                            i.fa.fa-code
+                            span &nbsp&nbspApps&nbsp&nbsp
+                            i.fa.fa-angle-down
+                        li: a.dropdown-button(href="#!" data-activates="user-dropdown")
+                            i.fa.fa-user-o
+                            span &nbsp&nbsp#{username}&nbsp&nbsp
+                            i.fa.fa-angle-down
+                        li &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            
+                        ul#apps-dropdown.dropdown-content
+                            li: a(href="/todo")
+                                i.fa.fa-list
+                                span &nbsp&nbspTodo&nbspList
+                            li.divider
+                            li: a(href="#")
+                                i.fa.fa-clock-o.fa-lg
+                                span &nbsp&nbspTimers
+                        ul#user-dropdown.dropdown-content
+                            li: a(href="/profile")
+                                i.fa.fa-vcard-o
+                                span &nbsp&nbspProfile
+                            li: a(href="/logout")
+                                i.fa.fa-power-off
+                                span &nbsp&nbspLogout
+                //-  SIDE NAV
+    ul#slide-out.side-nav.on-modal-blur
+        li: h4.brand-logo VØ
+        if notLoggedIn
+            //- li.active: ar(data-target="modal-signup") Signup
+            //- li: a(data-target="modal-login") Login
+        else
+            a(href="#") Horloges
+            a(href="/todo") ToDo
+            a(href="/logout") Logout

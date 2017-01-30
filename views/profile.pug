@@ -1,0 +1,36 @@
+doctype html
+html
+    include includes/head
+    body
+        include includes/header
+        
+        .container.on-modal-blur
+            .page-header.text-center
+                h1: span.fa.fa-anchor  Profile Page
+
+            .row
+
+                // LOCAL INFORMATION
+                .col-sm-6
+                    .well
+                        h3: span.fa.fa-user  Local
+                        p
+                            strong id
+                            |: #{user._id}
+                            br
+                            strong email
+                            |: #{user.local.email}
+                            br
+                            strong password
+                            |: #{user.local.password}
+
+        //-         show any messages that come back with authentication
+        //if loginMessage.length > 0
+        //    #toast-message(hidden) #{loginMessage}
+        //    script.
+        //        Materialize.toast($('#toast-message').text(), 5000, 'error');
+        ////-         show any messages that come back with signup
+        //if signupMessage.length > 0
+        //    #toast-message(hidden) #{signupMessage}
+        //    script.
+        //        Materialize.toast($('#toast-message').text(), 5000, 'error');
