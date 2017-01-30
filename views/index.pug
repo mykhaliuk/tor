@@ -19,7 +19,7 @@ html
 if loginMessage.length > 0
     #toast-message(hidden) #{loginMessage}
     script.
-        Materialize.toast($('#toast-message').text(), 5000, 'toast-error');
+        toast($('#toast-message').text(), 5000, 'toast-error', 'fa-exclamation');
 //-         show any messages that come back with signup
 if signupMessage.length > 0
     #toast-message(hidden) #{signupMessage}
