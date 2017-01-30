@@ -166,7 +166,7 @@ exports.default = function () {
     //console.log( data );
     $collection.append(data);
     $input.focus();
-    toast("Welcome, User!", 2500, 'toast-success', 'fa-info');
+    toast("All todos are synced successfully!", 2500, 'toast-success', 'fa-info');
   }).fail(function (err) {
     toast("Opps! Can't get todos. Error: " + err.responseText, 5000, 'toast-error', 'fa-exclamation');
   });
