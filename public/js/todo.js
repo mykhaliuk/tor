@@ -13,7 +13,7 @@ exports.default = {
         if (!iconClassName || iconClassName.lenght <= 0) {
             iconedMessage = message;
         } else {
-            iconedMessage = '<i class="fa ' + iconClassName + '"></i>&nbsp' + message;
+            iconedMessage = '<i class="fa ' + iconClassName + ' fa-lg"></i>&nbsp' + message;
         }
 
         Materialize.toast(iconedMessage, displayLength, styleClassName, completeCallback);
@@ -166,7 +166,7 @@ exports.default = function () {
     //console.log( data );
     $collection.append(data);
     $input.focus();
-    toast("Welcome, User!", 1000, 'toast-success', 'fa-info');
+    toast("Welcome, User!", 2500, 'toast-success', 'fa-info');
   }).fail(function (err) {
     toast("Opps! Can't get todos. Error: " + err.responseText, 5000, 'toast-error', 'fa-exclamation');
   });

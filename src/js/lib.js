@@ -7,7 +7,7 @@ export default {
         if (!iconClassName || iconClassName.lenght <= 0){
             iconedMessage = message;
         } else {
-            iconedMessage = '<i class="fa ' + iconClassName + '"></i>&nbsp' + message;
+            iconedMessage = '<i class="fa ' + iconClassName + ' fa-lg"></i>&nbsp' + message;
         }
 
         Materialize.toast ( iconedMessage, displayLength, styleClassName, completeCallback );
