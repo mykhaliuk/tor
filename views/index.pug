@@ -19,11 +19,11 @@ html
 if loginMessage.length > 0
     #toast-message(hidden) #{loginMessage}
     script.
-        Materialize.toast($('#toast-message').text(), 0, 'toast-error');
+        Materialize.toast($('#toast-message').text(), 15000, 'toast-error');
 //-         show any messages that come back with signup
 if signupMessage.length > 0
     #toast-message(hidden) #{signupMessage}
     script.
-        Materialize.toast($('#toast-message').text(), 0, 'toast-error');
+        Materialize.toast($('#toast-message').text(), 15000, 'toast-error');
 
 
